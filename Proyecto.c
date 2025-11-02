@@ -7,12 +7,15 @@
 
 void LimpiarPantalla();
 void DireccionArchivos(char *Direccion);
+void NombreArchivos(char *Direccion, const char *TipoArchivo);
 
 
 int main()
 {
     int opc;
     char Direccion [200];
+    char NombreInfijo[40];
+    char NombrePostFijo[40];
     bool DirMemoriaLista = false;
     bool ArchvioLeido = false;
     do
@@ -44,6 +47,8 @@ int main()
         switch(opc){
             case 0:
                 DireccionArchivos(Direccion);
+                NombreArchivos(NombreInfijo, "Infijo");
+                NombreArchivos(NombrePostFijo, "Postfijo");
                 opc = -4;
                 DirMemoriaLista = true;
             break;
@@ -91,7 +96,7 @@ void DireccionArchivos(char Direccion[100]) {
     strcpy(Direccion, ""); 
 
     while (1) {
-        printf("Ingrese la direccion de memoria o presione ESC para cancelar:\n");
+        printf("Ingrese la direccion de memoria o presione ESC para salir:\n");
         printf("Ruta actual: %s\n", Direccion);
 
     
@@ -123,4 +128,40 @@ void DireccionArchivos(char Direccion[100]) {
 
         LimpiarPantalla();
     }
+}
+
+void NombreArchivos(char Direccion[40], const char TipoArchivo[20]) {
+    LimpiarPantalla();
+
+    char DireccionTemp[40] = "";
+
+    printf("Ingrese el nombre del archivo (%s) o presione ESC para salir:\n", TipoArchivo);
+
+    while (1) {
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+            while (GetAsyncKeyState(VK_ESCAPE) & 0x8000) Sleep(50);
+            Direccion[0] = '\0'; 
+            return;
+        }
+
+        if (_kbhit()) break; 
+        Sleep(50);
+    }
+
+  
+    if (fgets(DireccionTemp, sizeof(DireccionTemp), stdin) == NULL) {
+        Direccion[0] = '\0';
+        return;
+    }
+
+    DireccionTemp[strcspn(DireccionTemp, "\n")] = '\0';
+
+    if (strlen(DireccionTemp) == 0) {
+        Direccion[0] = '\0';
+        return;
+    }
+
+    strcpy(Direccion, DireccionTemp);
+
+    LimpiarPantalla();
 }
