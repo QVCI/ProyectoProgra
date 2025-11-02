@@ -46,7 +46,8 @@ int main() {
 
             case 1:
                 if (!DirMemoriaLista) {
-                    printf("\nPrimero debe seleccionar la direccion (opcion 0)");
+                    printf("\nPrimero debe seleccionar la direccion (opcion 0)\n");
+                    
                     system("pause");
                     break;
                 }
@@ -57,16 +58,19 @@ int main() {
                     sprintf(RutaPostfijo, "%s\\%s", Direccion, NombrePostFijo);
                     ArchivoLeido = AbrirArchivo(&PtrArchivo, RutaInfijo, RutaPostfijo, PostFija);
                 }
+                printf("\n");
                 system("pause");
                 break;
 
             case 2:
                 if (!ArchivoLeido) {
                     printf("\nPrimero debe leer el archivo infijo y generar postfijo (opcion 1)");
+                    printf("\n");
                     system("pause");
                     break;
                 }
                 printf("\nResultado: : %d\n", EvaluarPostfija(PostFija));
+                printf("\n");
                 system("pause");
                 break;
 
@@ -157,7 +161,7 @@ bool AbrirArchivo(FILE **PtrArchivo, const char DireccionInfijo[140], const char
     int pos = 0;
     inicializar(&pila);
 
-    // Abrir archivo infijo
+  
     *PtrArchivo = fopen(DireccionInfijo, "r");
     if (*PtrArchivo == NULL) {
         printf("Error: no se pudo abrir el archivo.\n");
@@ -170,10 +174,10 @@ bool AbrirArchivo(FILE **PtrArchivo, const char DireccionInfijo[140], const char
     rewind(*PtrArchivo);
     printf("\n");
 
-    // Apilamos el paréntesis inicial
+    
     MeterDato(&pila, '(');
 
-    // Agregamos ')' al final para cerrar la expresión
+
     char buffer[200];
     int i = 0;
     while ((caracter = fgetc(*PtrArchivo)) != EOF)
@@ -182,7 +186,7 @@ bool AbrirArchivo(FILE **PtrArchivo, const char DireccionInfijo[140], const char
     buffer[i] = '\0';
     fclose(*PtrArchivo);
 
-    // Recorremos el buffer en lugar del tmpfile
+
     for (int j = 0; buffer[j] != '\0'; j++) {
         caracter = buffer[j];
         if (isspace(caracter)) continue;
@@ -210,7 +214,7 @@ bool AbrirArchivo(FILE **PtrArchivo, const char DireccionInfijo[140], const char
         }
     }
 
-    // Vaciar la pila
+ 
     char tope;
     while (SacarDato(&pila, &tope)) {
         if (tope != '(')
@@ -219,7 +223,6 @@ bool AbrirArchivo(FILE **PtrArchivo, const char DireccionInfijo[140], const char
 
     PostFija[pos] = '\0';
 
-    // Guardar en archivo postfijo
     FILE *salida = fopen(DireccionPostfijo, "w");
     if (salida) {
         fprintf(salida, "%s", PostFija);
